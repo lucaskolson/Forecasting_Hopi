@@ -6,9 +6,9 @@ A demgraphic forecasting project for partial completion of a graduate certificat
 - [Project Overview](#project-overview)
 - [Data Sources](#data-sources)
 - [Tools](#tools)
-- [Data Cleaning/Preparation](#data-cleaning/preparation)
+- [Data Cleaning](#data-cleaning)
 - [Data Analysis](#data-analysis)
-- [Results/Findings](#results/findings)
+- [Results](#results)
 - [Recommendations](#recommendations)
 - [Limitations](#limitations)
 - [References](#references)
@@ -32,7 +32,7 @@ Raw data was compiled and organized in Excel, while the data analysis and modeli
 •	popReconstruct
 •	pander
 
-### Data Cleaning/Preparation
+### Data Cleaning
 The initial goal for new mortality data was to use age-specific values for Pueblo or Native aggregates between 1940-2010, but careful investigation revealed these values were not available. Consequently, I selected the appropriate UN model lifetables for each decade, and conducted linear imputation of the death rate for each age bracket for the intervening five year periods. I also had to standardize the age bracket for 75+ due to changes in measurement between multiple decades.
 
 ### Data Analysis
@@ -43,7 +43,7 @@ For fertility, I created three different models to impute values between 1950 an
 
  
 
-### Results/Findings
+### Results
 Using the three different fertility models combined with the Brass models with uncertainty, I created 3,000 simulations between 1990-2010 to compare to the original forecast and the Tribal Enrolment data for this period. These results demonstrate that the official Tribal enrollment counts can be recreated using alternative assumptions regarding both mortality and fertility, as compared to Swanson’s model. Furthermore, forecasts are particularly sensitive to assumptions regarding fertility, and these alternate assumptions would lead to significantly different results for forecasts in 1937 or beyond.  
 
 ### Recommendations

@@ -3,15 +3,15 @@ A demgraphic forecasting project for partial completion of a graduate certificat
 
 ## Table of Contents
 
-- [Project Overview] (#project-overview)
-- [Data Sources] (#data-sources)
-- [Tools] (#tools)
-- [Data Cleaning/Preparation] (#data-cleaning/preparation)
-- [Data Analysis] (#data-analysis)
-- [Results/Findings] (#results/findings)
-- [Recommendations] (#recommendations)
-- [Limitations] (#limitations)
-- [References] (#references)
+- [Project Overview](#project-overview)
+- [Data Sources](#data-sources)
+- [Tools](#tools)
+- [Data Cleaning/Preparation](#data-cleaning/preparation)
+- [Data Analysis](#data-analysis)
+- [Results/Findings](#results/findings)
+- [Recommendations](#recommendations)
+- [Limitations](#limitations)
+- [References](#references)
 
 
 ### Project Overview

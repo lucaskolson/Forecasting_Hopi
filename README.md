@@ -1,5 +1,4 @@
 # Forecasting_Hopi
-A demgraphic forecasting project for partial completion of a graduate certificate in quantitative methods from the University of Washington.
 
 ## Table of Contents
 
@@ -27,24 +26,29 @@ The data for the original article’s model came from the 1937 Tribal Census and
 ## Tools
 Raw data was compiled and organized in Excel, while the data analysis and modeling was completed in R. Specific libraries used in R for this project include:
 
-•	tidyverse
-•	readxl
-•	popReconstruct
-•	pander
+-	tidyverse
+-	readxl
+-	popReconstruct
+-	pander
 
 ### Data Cleaning
 The initial goal for new mortality data was to use age-specific values for Pueblo or Native aggregates between 1940-2010, but careful investigation revealed these values were not available. Consequently, I selected the appropriate UN model lifetables for each decade, and conducted linear imputation of the death rate for each age bracket for the intervening five year periods. I also had to standardize the age bracket for 75+ due to changes in measurement between multiple decades.
 
 ### Data Analysis
 For mortality, I created Brass relational models for each sex and each 5-year period. 
- 
+
+ ![Picture1](https://github.com/lucaskolson/Forecasting_Hopi/assets/91341415/60bb622b-517c-4eb8-90a7-e85530e7451f)
+
 
 For fertility, I created three different models to impute values between 1950 and 2010 (fertility was assumed to be constant between 1940 and 1960 based on secondary literature, similar to the original article).
-
  
+![Picture2](https://github.com/lucaskolson/Forecasting_Hopi/assets/91341415/b4a1fbf0-802c-4aee-bc8b-920cd0d4622e)
 
 ### Results
 Using the three different fertility models combined with the Brass models with uncertainty, I created 3,000 simulations between 1990-2010 to compare to the original forecast and the Tribal Enrolment data for this period. These results demonstrate that the official Tribal enrollment counts can be recreated using alternative assumptions regarding both mortality and fertility, as compared to Swanson’s model. Furthermore, forecasts are particularly sensitive to assumptions regarding fertility, and these alternate assumptions would lead to significantly different results for forecasts in 1937 or beyond.  
+
+![Picture3](https://github.com/lucaskolson/Forecasting_Hopi/assets/91341415/854c03f1-9253-41ca-9374-f8926a4d073e)
+
 
 ### Recommendations
 Social Security Administration lifetables for the general US population do not accurately represent mortality for Native peoples. While imperfect, UN model life tables for developing countries provide a better approximation for projections. Furthermore, assumptions about fertility models can be more important and should be transparently conducted to ensure both accuracy and accountability.

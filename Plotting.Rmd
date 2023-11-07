@@ -1,0 +1,303 @@
+---
+title: "Forecasting"
+author: "Lucas Olson"
+date: "6/3/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+#library(demography)
+library(popReconstruct)
+library(pander)
+library(tidyverse)
+```
+
+```{r setup, include=FALSE}
+source("Mortality.R", echo = FALSE)
+source("Fertility.R", echo = FALSE)
+source("Forecasting.R", echo = FALSE)
+```
+
+
+linear model (calculated analytically)
+
+$$y=ax+b$$
+
+females:
+a = -0.008660809 
+
+males:
+a = -0.01011923 
+
+exponential model (estimated graphically and numerically)
+$$y=-e^{a*x} + b$$
+females:
+a = 0.0080226478 
+b = 1.48548
+
+males:
+a = 0.00926281 
+b = 1.509058
+
+**multiplied the gap with linear model by magnitude of 15
+
+log model (calculated analytically)
+
+$$y = -ln(ax)/b$$
+
+females:
+a = 0.0004669099
+b = 13.87395
+
+males:
+a = 0.0009276746 
+b = 11.87439
+
+$$q_x = 5M_x/(1+2.5M_x)$$
+
+```{r}
+article <- c(9663, 10522, 11431, 12389, 13398,14466)
+actual1 <- c(7465, 10046, 11439, 12479, 13751)
+actual2 <- c(7017, 9472, 10867, 12197, 13238, 14422)
+
+
+actual_all <- c(7017,7187,7465,7757,8726,9472,9815,10046,10357,10639,10867,11172,11439,11763,11992,12197,12362,12479,12752,12997,13238,13510,13751,13928,14062,14194,14361,14422,14484)
+actual_all <- data.frame(actual_all)
+rownames(actual_all) <- c(seq(1,6.6,.2))
+#rownames(actual_all) <- c(seq(1990,2018,1))
+
+plot(rownames(actual_all), actual_all[,1], type = "l")
+```
+
+```{r}
+median_linear_1990 <- quantile(projs_totals_linear[,1], 0.5)
+upper_linear_1990 <- quantile(projs_totals_linear[,1], 0.975)
+lower_linear_1990 <- quantile(projs_totals_linear[,1], 0.025)
+median_linear_1995 <- quantile(projs_totals_linear[,2], 0.5)
+upper_linear_1995 <- quantile(projs_totals_linear[,2], 0.975)
+lower_linear_1995 <- quantile(projs_totals_linear[,2], 0.025)
+median_linear_2000 <- quantile(projs_totals_linear[,3], 0.5)
+upper_linear_2000 <- quantile(projs_totals_linear[,3], 0.975)
+lower_linear_2000 <- quantile(projs_totals_linear[,3], 0.025)
+median_linear_2005 <- quantile(projs_totals_linear[,4], 0.5)
+upper_linear_2005 <- quantile(projs_totals_linear[,4], 0.975)
+lower_linear_2005 <- quantile(projs_totals_linear[,4], 0.025)
+median_linear_2010 <- quantile(projs_totals_linear[,5], 0.5)
+upper_linear_2010 <- quantile(projs_totals_linear[,5], 0.975)
+lower_linear_2010 <- quantile(projs_totals_linear[,5], 0.025)
+
+plot(projs_totals_linear[1,], xaxt="n", type = "l", ylim=c(7000,15000), xlim=c(1,7), lwd=.1, xlab="", ylab="Total Population - Linear Model")
+axis(1, at = 1:7, labels = c(years[11:15], 2015, 2020))
+for (i in 2:1000) {
+  lines(projs_totals_linear[i,], type = "l", lwd=.1)
+}
+#lines(actual, col="green", lwd=5)
+lines(article, col="blue", lwd=5)
+lines(rownames(actual_all), actual_all[,1], type = "l", col="green", lwd=5)
+lines(c(lower_linear_1990, lower_linear_1995, lower_linear_2000, lower_linear_2005, lower_linear_2010), lwd=2, lty=2, col="red")
+lines(c(upper_linear_1990, upper_linear_1995, upper_linear_2000, upper_linear_2005, upper_linear_2010), lwd=2, lty=2, col="red")
+lines(c(median_linear_1990, median_linear_1995, median_linear_2000, median_linear_2005, median_linear_2010), lwd=2, lty=2, col="red")
+legend("right", c("Swanson Forecast", "Official Count", "Linear Forecasts", "95% PI"), col = c("blue", "green", "black", "red"), lwd = 2)
+```
+
+```{r}
+median_exp_1990 <- quantile(projs_totals_exp[,1], 0.5)
+upper_exp_1990 <- quantile(projs_totals_exp[,1], 0.975)
+lower_exp_1990 <- quantile(projs_totals_exp[,1], 0.025)
+median_exp_1995 <- quantile(projs_totals_exp[,2], 0.5)
+upper_exp_1995 <- quantile(projs_totals_exp[,2], 0.975)
+lower_exp_1995 <- quantile(projs_totals_exp[,2], 0.025)
+median_exp_2000 <- quantile(projs_totals_exp[,3], 0.5)
+upper_exp_2000 <- quantile(projs_totals_exp[,3], 0.975)
+lower_exp_2000 <- quantile(projs_totals_exp[,3], 0.025)
+median_exp_2005 <- quantile(projs_totals_exp[,4], 0.5)
+upper_exp_2005 <- quantile(projs_totals_exp[,4], 0.975)
+lower_exp_2005 <- quantile(projs_totals_exp[,4], 0.025)
+median_exp_2010 <- quantile(projs_totals_exp[,5], 0.5)
+upper_exp_2010 <- quantile(projs_totals_exp[,5], 0.975)
+lower_exp_2010 <- quantile(projs_totals_exp[,5], 0.025)
+
+plot(projs_totals_exp[1,], type = "l", xaxt="n", ylim=c(7000,15000), xlim=c(1,7), lwd=.1, xlab="", ylab="Total Population - Exponential Model")
+axis(1, at = 1:7, labels = c(years[11:15], 2015, 2020))
+for (i in 2:1000) {
+  lines(projs_totals_exp[i,], type = "l", lwd=.1)
+}
+lines(article, col="blue", lwd=5)
+lines(rownames(actual_all), actual_all[,1], type = "l", col="green", lwd=5)
+lines(c(lower_exp_1990, lower_exp_1995, lower_exp_2000, lower_exp_2005, lower_exp_2010), lwd=2, lty=2, col="red")
+lines(c(upper_exp_1990, upper_exp_1995, upper_exp_2000, upper_exp_2005, upper_exp_2010), lwd=2, lty=2, col="red")
+lines(c(median_exp_1990, median_exp_1995, median_exp_2000, median_exp_2005, median_exp_2010), lwd=2, lty=2, col="red")
+legend("right", c("Swanson Forecast", "Official Count", "Exp Forecasts", "95% PI"), col = c("blue", "green", "black", "red"), lwd = 2)
+```
+
+```{r}
+median_log_1990 <- quantile(projs_totals_log[,1], 0.5)
+upper_log_1990 <- quantile(projs_totals_log[,1], 0.975)
+lower_log_1990 <- quantile(projs_totals_log[,1], 0.025)
+median_log_1995 <- quantile(projs_totals_log[,2], 0.5)
+upper_log_1995 <- quantile(projs_totals_log[,2], 0.975)
+lower_log_1995 <- quantile(projs_totals_log[,2], 0.025)
+median_log_2000 <- quantile(projs_totals_log[,3], 0.5)
+upper_log_2000 <- quantile(projs_totals_log[,3], 0.975)
+lower_log_2000 <- quantile(projs_totals_log[,3], 0.025)
+median_log_2005 <- quantile(projs_totals_log[,4], 0.5)
+upper_log_2005 <- quantile(projs_totals_log[,4], 0.975)
+lower_log_2005 <- quantile(projs_totals_log[,4], 0.025)
+median_log_2010 <- quantile(projs_totals_log[,5], 0.5)
+upper_log_2010 <- quantile(projs_totals_log[,5], 0.975)
+lower_log_2010 <- quantile(projs_totals_log[,5], 0.025)
+
+plot(projs_totals_log[1,], type = "l", xaxt="n", ylim=c(7000,15000), xlim=c(1,7), lwd=.1, xlab="", ylab="Total Population - Log Model")
+axis(1, at = 1:7, labels = c(years[11:15], 2015, 2020))
+for (i in 2:1000) {
+  lines(projs_totals_log[i,], type = "l", lwd=.1)
+}
+lines(article, col="blue", lwd=5)
+lines(rownames(actual_all), actual_all[,1], type = "l", col="green", lwd=5)
+lines(c(lower_log_1990, lower_log_1995, lower_log_2000, lower_log_2005, lower_log_2010), lwd=2, lty=2, col="red")
+lines(c(upper_log_1990, upper_log_1995, upper_log_2000, upper_log_2005, upper_log_2010), lwd=2, lty=2, col="red")
+lines(c(median_log_1990, median_log_1995, median_log_2000, median_log_2005, median_log_2010), lwd=2, lty=2, col="red")
+legend("right", c("Swanson Forecast", "Official Count", "Log Forecasts", "95% PI"), col = c("blue", "green", "black", "red"), lwd = 2)
+```
+
+
+```{r}
+par(mfrow=c(3,3))
+for (i in 1:5) {
+  plot(density(projs_totals_linear[,i]), main = colnames(projs_totals_linear)[i], xlab = "", ylab = "")
+  abline(v=mean(projs_totals_linear[,i]), col="red")
+  }
+```
+
+```{r}
+par(mfrow=c(3,3))
+for (i in 1:5) {
+  plot(density(projs_totals_log[,i]), main = colnames(projs_totals_log)[i], xlab = "", ylab = "")
+  abline(v=mean(projs_totals_log[,i]), col="red")
+  }
+```
+
+```{r}
+par(mfrow=c(3,3))
+for (i in 1:5) {
+  plot(density(projs_totals_exp[,i]), main = colnames(projs_totals_exp)[i], xlab = "", ylab = "")
+  abline(v=mean(projs_totals_exp[,i]), col="red")
+  }
+```
+
+```{r}
+#1985
+par(mfrow=c(3,3))
+for (i in 1:19) {
+  plot(density(unlist(log(sf10[i,]/(1-sf10[i,])))), xlab="", ylab="", main=age_brackets[i,])
+  abline(v=mean(unlist(log(sf10[i,]/(1-sf10[i,])))), col="red")
+}
+```
+
+```{r}
+#1985
+par(mfrow=c(3,3))
+for (i in 1:19) {
+  plot(density(unlist(sf10[i,])), xlab="", ylab="", main=age_brackets[i,])
+  abline(v=mean(unlist(sf10[i,])), col="red")
+}
+```
+
+
+
+```{r}
+#percent differences from article and official numbers
+log_median <- c(median_log_1990, median_log_1995, median_log_2000, median_log_2005, median_log_2010)
+exp_median <- c(median_exp_1990, median_exp_1995, median_exp_2000, median_exp_2005, median_exp_2010)
+linear_median <- c(median_linear_1990, median_linear_1995, median_linear_2000, median_linear_2005, median_linear_2010)
+
+results <- data.frame(years[11:15], actual1, article[1:5], linear_median, log_median, exp_median)
+
+for (i in 1:nrow(results)) {
+  results$diff_article[i] <- results$`actual1`[i] - results$`article.1.5.`[i]
+  results$percent_article[i] <- 100*round(((results$`article.1.5.`[i]/results$`actual1`[i]) - 1),4)
+}
+
+for (i in 1:nrow(results)) {
+  results$diff_linear[i] <- round(results$`actual`[i] - results$`linear_median`[i], 0)
+  results$percent_linear[i] <- 100*round(((results$`linear_median`[i]/results$`actual1`[i]) - 1),4)
+}
+
+for (i in 1:nrow(results)) {
+  results$diff_exp[i] <- round(results$`actual`[i] - results$`exp_median`[i], 0)
+  results$percent_exp[i] <- 100*round(((results$`exp_median`[i]/results$`actual1`[i]) - 1),4)
+}
+
+for (i in 1:nrow(results)) {
+  results$diff_log[i] <- round(results$`actual`[i] - results$`log_median`[i], 0)
+  results$percent_log[i] <- 100*round(((results$`log_median`[i]/results$`actual1`[i]) - 1),4)
+}
+
+colnames(results) <- c("Year", "Official Count", "Swanson", "Linear Fertility Model", "Log Fertility Model", "Exponential Fertility Model", "S_Difference", "S_Percent", "Linear_Difference", "Linear_Percent", "Exp_Difference", "Exp_Percent", "Log_Difference", "Log_Percent")
+
+results <- results[,c(1:3, 7:8, 4, 9:10, 5, 11:12, 6, 13:14)]
+
+results
+```
+
+
+```{r, eval=FALSE}
+#images for final report
+plot(brass.fit.1940.f, ylim=c(0,1), xaxt = "n", col=2, type="l", lwd=2, ylab="Survival Probability", xlab="Age brackets", main = "Female Survival Probabilities")
+axis(1, at = 1:18, labels = ages)
+lines(brass.fit.1945.f, type="l", col=3, lwd=2)
+lines(brass.fit.1950.f, type="l")
+lines(brass.fit.1955.f, type="l")
+lines(brass.fit.1960.f, type="l")
+lines(brass.fit.1965.f, type="l")
+lines(brass.fit.1970.f, type="l")
+lines(brass.fit.1975.f, type="l")
+lines(brass.fit.1980.f, type="l")
+lines(brass.fit.1985.f, type="l")
+lines(brass.fit.1990.f, type="l")
+lines(brass.fit.1995.f, type="l")
+lines(brass.fit.2000.f, type="l")
+lines(brass.fit.2005.f, type="l")
+lines(brass.fit.2010.f, type="l")
+legend("bottomleft", c("1940", "1945"), col=2:3, cex=1, lwd=3)
+```
+
+```{r, eval=FALSE}
+#images for final report
+plot(brass.fit.1940.m, ylim=c(0,1), xaxt = "n", col=2, lwd=2, type = "l", ylab="Survival Probability", xlab="Age brackets", main = "Male Survival Probabilities")
+axis(1, at = 1:18, labels = ages)
+lines(brass.fit.1945.m, type="l", col=3, lwd=2)
+lines(brass.fit.1950.m, type="l")
+lines(brass.fit.1955.m, type="l")
+lines(brass.fit.1960.m, type="l")
+lines(brass.fit.1965.m, type="l")
+lines(brass.fit.1970.m, type="l")
+lines(brass.fit.1975.m, type="l")
+lines(brass.fit.1980.m, type="l")
+lines(brass.fit.1985.m, type="l")
+lines(brass.fit.1990.m, type="l")
+lines(brass.fit.1995.m, type="l")
+lines(brass.fit.2000.m, type="l")
+lines(brass.fit.2005.m, type="l")
+lines(brass.fit.2010.m, type="l")
+legend("bottomleft", c("1940", "1945"), col=2:3, cex=1, lwd=3)
+```
+
+```{r}
+plot(ff_model_linear$X2, xaxt = "n", col="red", type="l", xlab="", ylab="Female Child-Women Ratio")
+axis(1, at = 1:15, labels = years)
+points(ff_model_log$X2, type="l")
+points(ff_model_exp$X3, col="blue", type="l")
+legend("bottomleft", c("Exp", "Linear", "Log"), col=c("blue", "red", "black"), lwd=3)
+```
+
+```{r}
+plot(fm_model_linear$X2, xaxt="n", type="l", xlab="", ylab="Male Child-Women Ratio")
+axis(1, at = 1:15, labels = years)
+points(fm_model_log$X2, col="red", type="l")
+points(fm_model_exp$X3, col="blue", type="l")
+legend("bottomleft", c("Exp", "Linear", "Log"), col=c("blue", "red", "black"), lwd=3)
+```
